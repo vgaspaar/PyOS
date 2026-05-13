@@ -18,7 +18,7 @@ class PCB:
         global pid_counter
         self.pid = pid_counter
         self.nome = nome
-        self.estado = "PRONTO"  # Estados possíveis: PRONTO, EXECUTANDO, TERMINADO
+        self.estado = "PRONTO"  # Estados possíveis: PRONTO, EXECUTANDO, BLOQUEADO, TERMINADO
         self.ciclos_restantes = random.randint(2, 6)  # Define o "peso" do processo (quantos ticks ele precisa)
         pid_counter += 1
 
@@ -53,7 +53,7 @@ def spawn_process(nome):
 
 def escalonador_tick():
     """Simula um ciclo (quantum) do processador executando a fila (Round Robin)"""
-    prontos = [p for p in tabela_processos if p.estado != "TERMINADO"]
+    prontos = [p for p in tabela_processos if p.estado != "PRONTO"]
     
     if not prontos:
         print("[CPU] Ociosa (Idle). Nenhum processo na fila de prontos.")
@@ -155,11 +155,12 @@ def shell():
                         print("Erro: O PID deve ser um número inteiro.")
                 else:
                     print("Uso correto: kill [PID]")
-                    
+                
             elif acao == "cpu":
                 escalonador_tick()
             elif acao == "run":
                 run_scheduler()
+                
                 
             else:
                 print(f"bash: {acao}: comando não encontrado. Digite 'help'.")
